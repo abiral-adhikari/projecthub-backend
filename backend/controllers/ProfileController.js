@@ -53,6 +53,18 @@ const UpdateProfile = async(req,res)=>{
     {
         res.status(404).json({error:error.message})
     }
-    }
+}
 
-module.exports ={CreateProfile,UpdateProfile};
+const GetName=async (req, res) =>{
+        const {userid}=req.params;
+        try{
+            const User=await Profile.findOne({_id:userid});
+            fullname=`${User.firstname} ${User.lastname}`
+            res.status(200).json({fullname:fullname})
+        }
+        catch(error)
+        {
+            res.status(404).json({error:error.message})
+        }
+    }
+module.exports ={CreateProfile,UpdateProfile,GetName};

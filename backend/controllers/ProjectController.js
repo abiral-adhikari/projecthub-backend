@@ -43,30 +43,37 @@ const CreateProject= async (req,res)=>{
     }
 }
 
+
+
 //function to view project details
 const ViewProject = async(req,res)=>{
     try{
-        const project_id =req.params;
-        const user_id=getuserid(req,res);
-
-        const projectowner= await Project.findOne({createdby:user_id})
-        const projectmember_id=await Project.findOne({member:user_id})
+        const {projectid}=req.params;
+        const userid=getuserid(req,res);
+        const projectcheck=await Project.findOne({"members._id":userid},{"_id":projectid})
         if(projectcheck){
-            res.status(200).json(projectowner)
+            if(projectcheck.createdby==userid){
+                res.status(200).json(projectcheck)
+            }else{
+                const projectdetails = await Project.findOne({_id:projectid},{code:0})
+                res.status(200).json(projectdetails)
+                }
+            }
+        else{
+            throw Error("You are not memeber of the project")
         }
     }catch(error){
         res.status(404).json({error: error.message})
     }
 }
 
-const DeleteProject = async(req,res)=>{
-}
 
+//join project with project code
 const JoinProject = async(req,res)=>{
     const {code} = req.body//use same variable name as body
     const user_id=getuserid(req,res);
     try{
-        const projectmatch = await Project.findOne({code:code});
+        const projectmatch = await Project.findOne({'code':code});
         if(!projectmatch){
             throw Error("Project Code is not valid ")
         }
@@ -87,6 +94,8 @@ const JoinProject = async(req,res)=>{
 }
 
 
+
+//Set designation for one project members
 const SetDesignation = async(req,res)=>{
     const {projectid,memberid}=req.params//id is the object id of profile/user 
     const {designation}=req.body;//designattion is string designation obtained from user
@@ -108,7 +117,7 @@ const SetDesignation = async(req,res)=>{
             {'_id':projectid,'members._id':memberid},
             //use $set operator updating members.designation .$ gives index of object
             {$set:{"members.$.designation":designation}},
-            {new:true}
+            {new:true}//new = true is necesssary for changed response
         )
          res.status(200).json(setdesignation)
     }
@@ -117,10 +126,54 @@ const SetDesignation = async(req,res)=>{
      }
 }
 
+
+//function to get all project details that person is member of 
+const getAllProjects=async(req,res)=>{
+    const user_id=getuserid(req,res)
+    try{
+    // using "field name":0 in query omits field in the resulting query object
+    const count = await Project.count({"members._id":user_id})
+        if(count==0){
+            throw Error('You have not joined/ created any project')
+        }
+        const projectmatch= await Project.find({"members._id":user_id},{'code':0})
+        res.status(200).json(projectmatch)
+    }catch(error){
+        res.status(400).json({error:error.message})
+    }
+
+}
+
+const SetDeadline = async(req,res)=>{
+    const {projectid}=req.params//id is the object id of profile/user 
+    const {deadline}=req.body;
+    const userid=getuserid(req,res)
+    try{
+        /*Checking if use of '' for property name to avoid unexpected token error
+          with findOne if findOne({id:id},{name:name}) works as or while findOne({id:id,name:name}) works as and
+        */
+        const projectcheck= await Project.findOne({'_id':projectid,'createdby':userid})
+        if (!deadline){
+            throw Error("Enter the deadline for the update")
+        }
+        if (!projectcheck){
+            throw Error("No such project created by you")
+        }
+        const setdeadline= await Project.findOneAndUpdate(
+            {'_id':projectid,'createdby':userid},
+            {"deadline":deadline},
+            {new:true})
+         res.status(200).json({"deadline":setdeadline})
+    }
+    catch(error){
+        res.status(404).json({error:error.message})
+    }
+}
 module.exports={
     CreateProject,
     JoinProject,
-    DeleteProject,
     ViewProject,
-    SetDesignation
+    SetDesignation,
+    getAllProjects,
+    SetDeadline
 }

@@ -91,6 +91,7 @@ const UpdateAssignment= async(req,res)=>{
                         },
                         {new:true}
                     )
+                    console.log(l)
                     res.status(200).send(updatetodo)
                 }
             }
@@ -101,7 +102,7 @@ const UpdateAssignment= async(req,res)=>{
                     throw Error("No such todo exist")
                 }
                 else{
-                    const checktodo = await Assignment.findOneAndUpdate(
+                    const todo = await Assignment.findOneAndUpdate(
                     {"_id":projectid,"list._id":todoid,"list.assignedto":userid},
                         {"$set":{
                            /* use list.$.field option else 
@@ -114,7 +115,8 @@ const UpdateAssignment= async(req,res)=>{
                         },
                         {new:true}
                     )
-                    res.status(200).send(checktodo)
+                    console.log(todo)
+                    res.status(200).send(todo)
                     }
                 }  
             }

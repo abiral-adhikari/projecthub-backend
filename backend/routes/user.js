@@ -8,7 +8,7 @@ const{CreateProfile,UpdateProfile,GetName}=require('../controllers/ProfileContro
 const router=express.Router();//Creating instance of router
 
 router.post('/signup',SignUp);
-router.get('/login',Login);
+router.post('/login',Login);
 
 //WE call reqAuth before Profile to authenticate user access to profile
 router.use(ReqAuth);

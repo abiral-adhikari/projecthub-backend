@@ -5,6 +5,7 @@ const jwt =require("jsonwebtoken")
 const {ReqAuth,getuserid} = require("../middleware/auth.js")
 
 const CreateProfile= async(req, res) => {
+    console.log(1)
     const {name,gender,phonenumber,dob,gitlink}= req.body 
     const iscreater=iscreater(req, res)
     try{
@@ -35,6 +36,7 @@ const CreateProfile= async(req, res) => {
         })
     res.status(200).json(createprofile)
     }catch(error){
+        console.log(1)
         res.status(404).json({error:error.message})
     }
 }

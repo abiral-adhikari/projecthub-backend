@@ -2,6 +2,7 @@ const express = require('express');//import express module
 const dbConnect=require('./database/database.js');
 const app =express();//creating express app
 const bodyparser=require('body-parser');
+const cors=require('cors');
 dbConnect();
 /*Port number selection 
 IF defined in the port environment variable 
@@ -10,9 +11,19 @@ and store it in PORT const
 */
 const PORT = process.env.PORT||5000;
 
+
+// Setting Cors header 
+app.use(cors());
+
+// Allow requests from specific origin
+app.use(cors({
+  origin: 'http://172.17.1.99:3000',
+  optionsSuccessStatus: 200
+}));
+
 //port listening to info
 const listen=() => {
-    app.listen(PORT,()=>{
+    app.listen(PORT,'0.0.0.0',()=>{
     console.log(`Listening on Port ${PORT}`);
 })}
 

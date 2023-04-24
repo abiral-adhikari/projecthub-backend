@@ -1,5 +1,7 @@
 const jwt= require('jsonwebtoken');
-const {User}=require('../models/user.js');
+const {User,Profile}=require('../models/user.js');
+const{Project}=require('../models/project.js');
+const{Discussion}=require('../models/discussion.js');
 
 // next call next handlers after this funcion is executed
 const ReqAuth=async (req,res,next)=>{
@@ -33,5 +35,6 @@ const getuserid=(req, res)=>{
     const{_id}=jwt.verify(token,process.env.SECRET);
     return _id;
 }
+
 
 module.exports = {ReqAuth,getuserid};

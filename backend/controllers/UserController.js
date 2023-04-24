@@ -51,6 +51,7 @@ const SignUp= async(req,res)=>{
 
 const Login = async (req, res) =>{
     const {email,password} = req.body;
+    console.log({email,password})
     try{
         //Checking if fields are empty
         if(!email || !password){

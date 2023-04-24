@@ -27,15 +27,10 @@ const UserProfile= new Schema({
         type:String,
         ref:'UserRegistration'//here both collection have same field name so referencing to just the collection is enough
     },
-    firstname:{
+    name:{
         type:String,
         required: true,
-        length:20
-    },
-    lastname:{
-        type:String,
-        required: true,
-        length:20
+        length:50
     },
     gender: {
         type: String, 
@@ -43,7 +38,6 @@ const UserProfile= new Schema({
     },
     phonenumber: {
         type:String,
-        length:10,
         required: true
     },
     gitlink:{

@@ -15,9 +15,16 @@ const ProjectSchema = new Schema({
         unique : true,
     },
     createdby:{
+        _id:{
         type:Schema.Types.ObjectId,
         reference:Profile,
         required:true
+        },
+        name:{
+            type:String,
+            reference:Profile,
+            required:true
+        }
     },
     deadline:{
         type:Date,
@@ -29,6 +36,10 @@ const ProjectSchema = new Schema({
             type:Schema.Types.ObjectId,
             reference:Profile
             },
+            name:{
+                type:String,
+                reference:Profile
+            },
             designation:{
                 type:String,
                 default:" ",
@@ -36,6 +47,7 @@ const ProjectSchema = new Schema({
             },
     }]
 })
+
 
 const Project=mongoose.model('Project',ProjectSchema)
 

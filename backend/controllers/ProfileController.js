@@ -5,7 +5,8 @@ const jwt =require("jsonwebtoken")
 const {ReqAuth,getuserid} = require("../middleware/auth.js")
 
 const CreateProfile= async(req, res) => {
-    const {firstname,lastname,gender,phonenumber,dob,gitlink}= req.body 
+    const {name,gender,phonenumber,dob,gitlink}= req.body 
+    const iscreater=iscreater(req, res)
     try{
         //getting id of session user from getid function of middleware
         const _id = getuserid(req,res)
@@ -13,11 +14,11 @@ const CreateProfile= async(req, res) => {
         //finding user with given id
         const user = await User.findOne({_id});
 
-        if(!firstname || !lastname || !phonenumber || !gitlink){
-            throw Error("You must provide a firstname,lastname,phonenumber and gitlink compulsarily")
+        if(!name || !phonenumber || !gitlink){
+            throw Error("You must provide a firstname,phonenumber and gitlink compulsarily")
         }
 
-        const profileexists= await Profile.findOne({_id})//use findone to give null value if only find is used we get null array difficult to use with if
+        const profileexists= await Profil64452c9ad117588ebad5f1c7e.findOne({_id})//use findone to give null value if only find is used we get null array difficult to use with if
         if(profileexists){
             throw Error("Profile already exists");
         }
@@ -26,8 +27,7 @@ const CreateProfile= async(req, res) => {
         const createprofile= await Profile.create({
             _id:user._id,
             email:user.email,
-            firstname:firstname,
-            lastname:lastname,
+            name:name,
             gender:gender,
             phonenumber:phonenumber,
             dob:dob,
@@ -40,10 +40,10 @@ const CreateProfile= async(req, res) => {
 }
 
 const UpdateProfile = async(req,res)=>{
-    const {firstname,lastname,gender,phonenumber,dob,gitlink}= req.body 
+    const {name,gender,phonenumber,dob,gitlink}= req.body 
     try{
         //getting id of session user from getid function of middleware
-        const _id = getid(req,res)
+        const _id = getuserid(req,res)
         
         //finding profile with given id
         const upadateprofile = await Profile.findOneAndUpdate({_id:_id},req.body);
@@ -59,8 +59,8 @@ const GetName=async (req, res) =>{
         const {userid}=req.params;
         try{
             const User=await Profile.findOne({_id:userid});
-            fullname=`${User.firstname} ${User.lastname}`
-            res.status(200).json({fullname:fullname})
+            let name=User.name
+            res.status(200).json({name:name})
         }
         catch(error)
         {

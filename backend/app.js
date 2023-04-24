@@ -1,6 +1,7 @@
 const express = require('express');//import express module 
 const dbConnect=require('./database/database.js');
 const app =express();//creating express app
+const bodyparser=require('body-parser');
 dbConnect();
 /*Port number selection 
 IF defined in the port environment variable 
@@ -24,6 +25,9 @@ const middleware=()=>{
     })
 }    
 
+const parser=()=>{
+app.use(bodyparser.urlencoded({ extended: true }));
+}
 /*functions to listen ,middle ware and database connections
   that are called when app is imported
 */

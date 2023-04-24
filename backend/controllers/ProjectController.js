@@ -1,8 +1,11 @@
 const{Project} =require('../models/project')
 const{Profile}= require('../models/user')
+const{Discussion}= require('../models/discussion')
+const{Assignment}=require('../models/todo.js')
 const shortid = require('shortid');
-const{getuserid} = require('../middleware/auth.js')
-
+const nodemailer=require('nodemailer');
+const{parser}=require('../app');
+const{getuserid,ismember,iscreater} = require('../middleware/auth.js')
 
 
 const CreateProject= async (req,res)=>{
@@ -25,17 +28,27 @@ const CreateProject= async (req,res)=>{
            }
 
         const user=await Profile.findOne({_id:_id})
-        const fullname=`${user.firstname} ${user.lastname}`
         
         const createProject=await Project.create({
             title:title,
             details:details,
             deadline:deadline,
-            createdby:_id,
+            createdby:{_id:_id,name:user.name},
             code:projectcode,
-            members:[{_id:_id}]
+            members:[{_id:_id,name:user.name}]
         })
         
+
+        const createDiscussion= await Discussion.create({
+            "_id":createProject._id,
+            "title":createProject.title
+        })
+
+        const createAssignment= await Assignment.create({
+            "_id":createProject._id,
+            "title":createProject.title
+        })
+
         res.status(200).json(createProject)
 
     }catch(error){
@@ -47,16 +60,22 @@ const CreateProject= async (req,res)=>{
 
 //function to view project details
 const ViewProject = async(req,res)=>{
+    // const creatercheck=iscreater(req,res);
+    // const membercheck=ismember(req,res);
+    const userid=getuserid(req,res);
+    console.log(userid)
     try{
         const {projectid}=req.params;
-        const userid=getuserid(req,res);
-        const projectcheck=await Project.findOne({"members._id":userid},{"_id":projectid})
+        const projectcheck=await Project.findOne({"members._id":userid,"_id":projectid})
         if(projectcheck){
-            if(projectcheck.createdby==userid){
+            const creater=await Project.findOne({"creater._id":userid,"_id":projectid})
+            if(creater){
                 res.status(200).json(projectcheck)
+                console.log(1)
             }else{
                 const projectdetails = await Project.findOne({_id:projectid},{code:0})
                 res.status(200).json(projectdetails)
+                console.log(2)
                 }
             }
         else{
@@ -72,21 +91,26 @@ const ViewProject = async(req,res)=>{
 const JoinProject = async(req,res)=>{
     const {code} = req.body//use same variable name as body
     const user_id=getuserid(req,res);
+    console.log(user_id)
     try{
         const projectmatch = await Project.findOne({'code':code});
         if(!projectmatch){
             throw Error("Project Code is not valid ")
         }
-        const membermatch= await Project.findOne({'members._id':user_id});
+        // don't use curly 
+        const membermatch= await Project.findOne({'code':code,'members._id':user_id});
+        console.log(membermatch)
         if(membermatch){
             throw Error("Already a  member of the project can't join again")
         }else
         {
-            const addmember = await Project.findOneAndUpdate(
+        const user=await Profile.findOne({'_id':user_id})
+        const addmember = await Project.findOneAndUpdate(
                 {code:code},
-                {$push:{members:{_id:user_id}}}
+                {$push:{members:{_id:user_id,name:user.name}}},
+                {new:true}
             )
-            res.status(200).json({msg:`user of id ${user_id} added successfully to project of code ${code} `})
+            res.status(200).json({msg:`You have successfully joined project : ${projectmatch.title} `})
         }
     }catch(error){
         res.status(404).json({error: error.message})
@@ -100,19 +124,22 @@ const SetDesignation = async(req,res)=>{
     const {projectid,memberid}=req.params//id is the object id of profile/user 
     const {designation}=req.body;//designattion is string designation obtained from user
     const user_id =getuserid(req,res);//getting user id to check if admin or not
+    const creatercheck=iscreater(req,res);
     try{
         /*Checking if use of '' for property name to avoid unexpected token error
-          with findOne if findOne({id:id},{name:name}) works as or while findOne({id:id,name:name}) works as and
+          findOne({id:id},{name:name}) means find with id show name
+           findOne({id:id,name:name}) means findn with id and name and show all
         */
         const projectcheck= await Project.findOne({'_id':projectid,'members._id':memberid})
-        
+        console.log(creatercheck)
         if (!designation){
             throw Error("Enter the designation for the update")
         }
         if (!projectcheck){
             throw Error("No such project with provided members")
         };
-        const setdesignation = await Project.findOneAndUpdate(
+        if(creatercheck){
+            const setdesignation = await Project.findOneAndUpdate(
             //herer 'members._id' is valid but it updating no so using $set
             {'_id':projectid,'members._id':memberid},
             //use $set operator updating members.designation .$ gives index of object
@@ -120,6 +147,9 @@ const SetDesignation = async(req,res)=>{
             {new:true}//new = true is necesssary for changed response
         )
          res.status(200).json(setdesignation)
+        }else{
+            throw Error("You are not allowed to set designations")
+        }
     }
     catch(error){
         res.status(400).json({error:error.message})
@@ -144,6 +174,8 @@ const getAllProjects=async(req,res)=>{
 
 }
 
+
+// Seting Deadlines
 const SetDeadline = async(req,res)=>{
     const {projectid}=req.params//id is the object id of profile/user 
     const {deadline}=req.body;
@@ -152,7 +184,8 @@ const SetDeadline = async(req,res)=>{
         /*Checking if use of '' for property name to avoid unexpected token error
           with findOne if findOne({id:id},{name:name}) works as or while findOne({id:id,name:name}) works as and
         */
-        const projectcheck= await Project.findOne({'_id':projectid,'createdby':userid})
+       console.log(userid)
+        const projectcheck= await Project.findOne({'_id':projectid},{"createdby._id":userid})
         if (!deadline){
             throw Error("Enter the deadline for the update")
         }
@@ -160,7 +193,7 @@ const SetDeadline = async(req,res)=>{
             throw Error("No such project created by you")
         }
         const setdeadline= await Project.findOneAndUpdate(
-            {'_id':projectid,'createdby':userid},
+            {'_id':projectid,'createdby._id':userid},
             {"deadline":deadline},
             {new:true})
          res.status(200).json({"deadline":setdeadline})
@@ -169,11 +202,108 @@ const SetDeadline = async(req,res)=>{
         res.status(404).json({error:error.message})
     }
 }
+
+
+const SendMail= async (req,res) => {
+    const{projectid}=req.params
+    const userid=getuserid(req,res)
+    const{email,password}=req.body
+    try{
+        const creatercheck=await Project.findOne({'created._id':userid,"_id":projectid})
+        const Projects= await Project.findOne({_id:projectid})
+        const User=await Profile.findOne({_id:userid})
+        console.log(User)
+            if(!Project){
+                throw Error("No such Project fouond")
+            }
+        if(creatercheck){
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: User.email,
+                  pass: password
+                }
+              });
+              console.log(User.email)
+              // setup email data with unicode symbols
+              const mailOptions = {
+                from: User.email,
+                to: email,
+                subject: 'Code to Join Project',
+                text: Projects.code
+              };
+              console.log(2)
+              // send mail with defined transport object
+              transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                  console.log(error);
+                } else {
+                  res.status(200).json({message:`Email sent:  ${info.response}`});
+                }
+              });
+        }else{
+            throw Error("You are not the manager of the project")
+        }
+    }catch(error){
+        res.status(400).json({error:error.message})
+    }
+
+}
+
+const GetId= async (req, res) => {
+    const userid= getuserid(req,res)
+    try{
+        res.status(200).json({userid:userid})
+    }
+    catch(error)
+    {
+        res.status(400).json({error:error.message})
+    }
+}
+
+const CheckMember= async (req,res)=>{
+    const{projectid}=req.params
+    const userid=getuserid(req,res);
+    try{
+        const projectcheck= await Project.findOne({"members._id":userid,"_id":projectid})
+        console.log(projectcheck)
+        if(projectcheck){
+            res.status(200).json({flag:true})
+        }else{
+            res.status(200).json({flag:false})
+        }
+    }
+    catch(error){
+        res.status(400).json({error:error.message})
+    }
+}
+
+const CheckCreater=  async (req,res)=>{
+    const{projectid}=req.params
+    const userid=getuserid(req,res);
+    console.log(typeof(userid))
+    try{
+        const projectcheck= await Project.findOne({"createdby._id":userid,"_id":projectid})
+        if(projectcheck){
+            res.status(200).json({flag:true})
+        }else{
+            res.status(200).json({flag:false})
+        }
+    }
+    catch(error){
+        res.status(400).json({error:error.message})
+    }
+}
+
 module.exports={
     CreateProject,
     JoinProject,
     ViewProject,
     SetDesignation,
     getAllProjects,
-    SetDeadline
+    SetDeadline,
+    SendMail,
+    GetId,
+    CheckMember,
+    CheckCreater
 }

@@ -55,7 +55,7 @@ const UpdateAssignment= async(req,res)=>{
     const{tag,label,title,point,detail,deadline,assignedto}=req.body
     const {projectid,todoid}=req.params
     const userid = getuserid(req,res)
-    
+    console.log(todoid)
     try{
         //Checking if assignment document with given id exists
         const project= await Project.findOne({_id:projectid,"members._id":userid})
@@ -70,12 +70,12 @@ const UpdateAssignment= async(req,res)=>{
                 const checktodo= await Assignment.findOne({"_id":projectid,"list._id":todoid})
                 // checking if  provided todop exists
                 if(!checktodo){
-                    throw Error("No such todo exist")
+                    throw Error("No such todo exist belonging to you")
                 }
                 else{
                     const updatetodo= await Assignment.findOneAndUpdate(
-                        {"_id":projectid,"list._id":todoid},
-                        {"$set":{
+                        {"list._id":todoid},
+                        {$set:{
                            /* use list.$.field option else 
                            if you use like with push of set:{list:{field}}
                            it will update the list with single updated object
@@ -91,20 +91,20 @@ const UpdateAssignment= async(req,res)=>{
                         },
                         {new:true}
                     )
-                    console.log(l)
+                    console.log(1)
                     res.status(200).send(updatetodo)
                 }
             }
             else{
-                const checktodo= await Assignment.findOne({"_id":projectid,"list._id":todoid})
+                const checktodo= await Assignment.findOne({"_id":projectid,"list._id":todoid,"list.assignedto":userid})
                 // checking if  provided todop exists
                 if(!checktodo){
-                    throw Error("No such todo exist")
+                    throw Error("No such todo exists assigned to you")
                 }
                 else{
                     const todo = await Assignment.findOneAndUpdate(
-                    {"_id":projectid,"list._id":todoid,"list.assignedto":userid},
-                        {"$set":{
+                        {"list._id":todoid},
+                        {$set:{
                            /* use list.$.field option else 
                            if you use like with push of set:{list:{field}}
                            it will update the list with single updated object
@@ -115,7 +115,7 @@ const UpdateAssignment= async(req,res)=>{
                         },
                         {new:true}
                     )
-                    console.log(todo)
+                    console.log(2)
                     res.status(200).send(todo)
                     }
                 }  

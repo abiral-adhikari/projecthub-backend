@@ -52,7 +52,7 @@ const SignUp= async(req,res)=>{
     }
     catch(error){
         console.log(7)
-        res.json({error:error.message})
+        res.status(404).json({error:error.message})
     }
 }
 
@@ -80,7 +80,7 @@ const Login = async (req, res) =>{
         res.status(200).json(output);
     }catch(error){
         console.log(error);
-        res.json({error:error.message})
+        res.status(404).json({error:error.message})
 }
 }
 

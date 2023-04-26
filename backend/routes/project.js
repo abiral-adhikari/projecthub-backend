@@ -16,7 +16,7 @@ router.use(ReqAuth)
 router.post('/create',CreateProject);
 router.patch('/join',JoinProject);
 router.patch('/setdesignation/:projectid/:memberid',SetDesignation)
-router.get('/getall/',getAllProjects)
+router.get('/getall',getAllProjects)
 router.get('/view/:projectid',ViewProject)
 router.patch('/setdeadline/:projectid',SetDeadline);
 

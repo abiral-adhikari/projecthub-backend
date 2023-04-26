@@ -43,7 +43,7 @@ const ProjectSchema = new Schema({
             designation:{
                 type:String,
                 default:" ",
-                length:20
+                length:50
             },
     }]
 })

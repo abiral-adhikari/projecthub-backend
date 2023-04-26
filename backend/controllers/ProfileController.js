@@ -7,7 +7,6 @@ const {ReqAuth,getuserid} = require("../middleware/auth.js")
 const CreateProfile= async(req, res) => {
     console.log(1)
     const {name,gender,phonenumber,dob,gitlink}= req.body 
-    const iscreater=iscreater(req, res)
     try{
         //getting id of session user from getid function of middleware
         const _id = getuserid(req,res)
@@ -16,10 +15,10 @@ const CreateProfile= async(req, res) => {
         const user = await User.findOne({_id});
 
         if(!name || !phonenumber || !gitlink){
-            throw Error("You must provide a firstname,phonenumber and gitlink compulsarily")
+            throw Error("You must provide a name,phonenumber and gitlink compulsarily")
         }
 
-        const profileexists= await Profil64452c9ad117588ebad5f1c7e.findOne({_id})//use findone to give null value if only find is used we get null array difficult to use with if
+        const profileexists= await Profile.findOne({_id})//use findone to give null value if only find is used we get null array difficult to use with if
         if(profileexists){
             throw Error("Profile already exists");
         }

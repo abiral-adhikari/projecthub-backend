@@ -173,9 +173,31 @@ const UserProgress=async(req,res)=>{
         res.status(400).json({error:error.message})
     }
 }
+
+
+const ViewAssignment=async(req,res)=>{
+    const {projectid}=req.params
+    const userid = getuserid(req,res)
+    try{
+         //Checking if assignment document with given id exists
+         const project= await Project.findOne({_id:projectid,"members._id":userid})
+         // Checking if such project exists
+         if(!project){
+             throw Error("You are not member of the project")
+         }else{
+             // if project exists checking if the current user  the creater
+             const todolist= await Assignment.find({"_id":projectid})
+             res.status(200).json(todolist)
+        }
+        }catch(error)
+        {
+            res.status(404).json({error:error.message})
+        }
+}
 module.exports={
     CreateAssignment,
     UpdateAssignment,
     ProjectProgress,
-    UserProgress
+    UserProgress,
+    ViewAssignment
 }

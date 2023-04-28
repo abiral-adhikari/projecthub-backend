@@ -209,7 +209,7 @@ const ViewSelfAssignment=async(req,res)=>{
              throw Error("You are not member of the project")
          }else{
              // if project exists checking if the current user  the creater
-             const todolist= await Assignment.find({"_id":projectid,"list.assignedto":userid},{"list.assignedto":1,"deadline":1})
+             const todolist= await Assignment.find({"_id":projectid,"list.assignedto":userid},{"list.title":1,"list.deadline":1})
              res.status(200).json(todolist)
         }
         }catch(error)

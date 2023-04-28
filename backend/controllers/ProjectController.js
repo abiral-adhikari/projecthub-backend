@@ -48,7 +48,7 @@ const CreateProject= async (req,res)=>{
             "_id":createProject._id,
             "title":createProject.title
         })
-
+        console.log(createProject)
         res.status(200).json(createProject)
 
     }catch(error){
@@ -73,7 +73,7 @@ const ViewProject = async(req,res)=>{
                 res.status(200).json(projectcheck)
                 console.log(1)
             }else{
-                const projectdetails = await Project.findOne({_id:projectid},{code:0})
+                const projectdetails = await Project.findOne({_id:projectid})
                 res.status(200).json(projectdetails)
                 console.log(2)
                 }
@@ -346,8 +346,8 @@ module.exports={
     getAllProjects,
     SetDeadline,
     SendMail,
-    GetId,
     CheckMember,
     CheckCreater,
-    UpdateProject
+    UpdateProject,
+    GetId
 }

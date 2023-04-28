@@ -56,15 +56,29 @@ const UpdateProfile = async(req,res)=>{
     }
 }
 
+
+const ViewProfile= async(req,res)=>{ 
+    try{
+        //getting id of session user from getid function of middleware
+        const _id = getuserid(req,res)
+        //finding profile with given id
+        const profile = await Profile.findOne({_id:_id})
+        res.status(200).json(profile)
+    }catch(error)
+    {
+        res.status(404).json({error:error.message})
+    }
+}
 const GetNamebyId=async (req, res) =>{
         const {userid}=req.params;
         try{
             const User=await Profile.findOne({_id:userid});
             let name=User.name
+            console.log(name)
             res.status(200).json({name:name})
         }
         catch(error)
-        {
+        {   console.log(2)
             res.status(404).json({error:error.message})
         }
 }
@@ -73,7 +87,7 @@ const GetNamebyToken=async (req, res) =>{
     const userid=getuserid(req,res);
     try{
         const User=await Profile.findOne({_id:userid});
-        let name=User.name
+        const name=User.name
         res.status(200).json({name:name})
     }
     catch(error)
@@ -83,4 +97,4 @@ const GetNamebyToken=async (req, res) =>{
 }
 
 
-module.exports ={CreateProfile,UpdateProfile,GetNamebyId,GetNamebyToken};
+module.exports ={CreateProfile,UpdateProfile,GetNamebyId,GetNamebyToken,ViewProfile};

@@ -29,5 +29,4 @@ router.get('/getid',GetId)
 router.get('/ismember/:projectid',CheckMember)
 router.get('/iscreater/:projectid',CheckCreater)
 
-
 module.exports = router;

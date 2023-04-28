@@ -73,6 +73,7 @@ const UpdateAssignment= async(req,res)=>{
                     throw Error("No such todo exist belonging to you")
                 }
                 else{
+                    console.log(1)
                     const updatetodo= await Assignment.findOneAndUpdate(
                         {"list._id":todoid},
                         {$set:{
@@ -91,7 +92,7 @@ const UpdateAssignment= async(req,res)=>{
                         },
                         {new:true}
                     )
-                    console.log(1)
+                    console.log()
                     res.status(200).send(updatetodo)
                 }
             }
@@ -140,7 +141,7 @@ const ProjectProgress=async (req, res)=>{
                         $group:{
                             _id:"$list.assignedto",
                             totalPoints:{$sum:"$list.point"},
-                            completedPoints: { $sum: { $cond: [{ $eq: ["$list.tag", "Complete"] }, "$list.point", 0] } }  
+                            completedPoints: { $sum: { $cond: [{ $eq: ["$list.tag", "Completed"] }, "$list.point", 0] } }  
                         }  
                     },
             ])
@@ -194,10 +195,33 @@ const ViewAssignment=async(req,res)=>{
             res.status(404).json({error:error.message})
         }
 }
+
+
+
+const ViewSelfAssignment=async(req,res)=>{
+    const {projectid}=req.params
+    const userid = getuserid(req,res)
+    try{
+         //Checking if assignment document with given id exists
+         const project= await Project.findOne({_id:projectid,"members._id":userid})
+         // Checking if such project exists
+         if(!project){
+             throw Error("You are not member of the project")
+         }else{
+             // if project exists checking if the current user  the creater
+             const todolist= await Assignment.find({"_id":projectid,"list.assignedto":userid},{"list.assignedto":1,"deadline":1})
+             res.status(200).json(todolist)
+        }
+        }catch(error)
+        {
+            res.status(404).json({error:error.message})
+        }
+}
 module.exports={
     CreateAssignment,
     UpdateAssignment,
     ProjectProgress,
     UserProgress,
-    ViewAssignment
+    ViewAssignment,
+    ViewSelfAssignment
 }

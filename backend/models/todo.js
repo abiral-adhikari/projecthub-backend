@@ -15,7 +15,7 @@ const AssignmentSchema= new Schema({
     list:[{
         tag:{
             type: 'string',
-            enum:["ToDo","BackLog","InProgress","Review","Complete"],
+            enum:["ToDo","BackLog","InProgress","Review","Completed"],
             required: true
         },
         label:{
@@ -34,9 +34,11 @@ const AssignmentSchema= new Schema({
             required:true
         },
         assignedto:{
+            _id:{
             type:Schema.Types.ObjectId,
             reference:Profile,
             required:true
+            }
         },
         deadline:{
             type:"Date",

@@ -14,7 +14,6 @@ const ResourceSchema = new Schema({
         required:true
     },
     list:[{
-        
         title:{
             type:String,
             required:true
@@ -30,8 +29,8 @@ const ResourceSchema = new Schema({
         },
         createdAt:{
             type:Date,
-            required:true,
-            default:Date.now
+            default:Date.now()
+
         }
         },
         

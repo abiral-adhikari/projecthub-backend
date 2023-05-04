@@ -48,7 +48,7 @@ const CreateProject= async (req,res)=>{
             "_id":createProject._id,
             "title":createProject.title
         })
-        console.log(createProject)
+console.log(createProject)
         res.status(200).json(createProject)
 
     }catch(error){
@@ -257,7 +257,7 @@ const GetId= async (req, res) => {
     }
     catch(error)
     {
-        res.status(404).json({error:error.message})
+        res.status(400).json({error:error.message})
     }
 }
 
@@ -337,7 +337,6 @@ const UpdateProject=  async (req,res)=>{
     }
 }
 
-
 module.exports={
     CreateProject,
     JoinProject,
@@ -346,8 +345,9 @@ module.exports={
     getAllProjects,
     SetDeadline,
     SendMail,
+    GetId,
     CheckMember,
     CheckCreater,
     UpdateProject,
-    GetId
+    
 }

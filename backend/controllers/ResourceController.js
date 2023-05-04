@@ -10,7 +10,7 @@ const CreateResource= async (req,res)=>{
     const{title,link}=req.body
     const{projectid}=req.params
     const userid=getuserid(req,res)
-    console.log(1)
+    
     try{
         const resource=await Resource.findOne({_id:projectid})
         if(!resource){
@@ -30,6 +30,7 @@ const CreateResource= async (req,res)=>{
                             uploadedBy:user.name,
                             title:title,
                             link:link,
+                           
                         }
                         }
                     },

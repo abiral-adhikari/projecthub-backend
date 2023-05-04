@@ -4,8 +4,8 @@ const{Project}=require('../models/project.js');
 const{Discussion}=require('../models/discussion.js');
 
 // next call next handlers after this funcion is executed
+//Verifying the Authentication
 const ReqAuth=async (req,res,next)=>{
-    //Verifying the Authentication
     const{authorization}=req.headers;
     if(!authorization){
         return res.status(400).json({error: 'Authorization Token not provided'});
@@ -20,7 +20,7 @@ const ReqAuth=async (req,res,next)=>{
        /*to get user document by _id and add it to the req object
          we use .select('_id') to select id from user document
        */
-       req.user= await User.findOne({_id}).select('_id')
+       req.user= await User.findOne({_id}).select('_id' )
        next()
     }
     catch(error){
@@ -30,11 +30,11 @@ const ReqAuth=async (req,res,next)=>{
 
 
 const getuserid=(req, res)=>{
-    const {authorization} = req.headers
+    const {authorization} = req.headers;
     const token =authorization.split(' ')[1];
     const{_id}=jwt.verify(token,process.env.SECRET);
     return _id;
 }
-
+''
 
 module.exports = {ReqAuth,getuserid};

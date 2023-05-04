@@ -30,14 +30,6 @@ const ProjectSchema = new Schema({
         type:Date,
         default:null,
     },
-    completedflag:{
-        type:"Boolean",
-        required:true,
-        default:false
-    },
-    completedon:{
-        type:Date,
-    },
     members:[
         {
             _id:{
@@ -51,11 +43,14 @@ const ProjectSchema = new Schema({
             designation:{
                 type:String,
                 default:" ",
-                length:50
+                length:20
             },
+    }],
+    completedflag:{
+        type:"Boolean",
+        required:true,
+        default:false
     },
-    ]
-   
 })
 
 

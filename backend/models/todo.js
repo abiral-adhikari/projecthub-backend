@@ -38,6 +38,11 @@ const AssignmentSchema= new Schema({
             type:Schema.Types.ObjectId,
             reference:Profile,
             required:true
+            },
+            name:{
+                type:String,
+                reference:Profile,
+                required:true
             }
         },
         deadline:{

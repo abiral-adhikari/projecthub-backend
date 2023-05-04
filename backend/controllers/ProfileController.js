@@ -7,6 +7,7 @@ const {ReqAuth,getuserid} = require("../middleware/auth.js")
 const CreateProfile= async(req, res) => {
     console.log(1)
     const {name,gender,phonenumber,dob,gitlink}= req.body 
+  
     try{
         //getting id of session user from getid function of middleware
         const _id = getuserid(req,res)
@@ -15,7 +16,7 @@ const CreateProfile= async(req, res) => {
         const user = await User.findOne({_id});
 
         if(!name || !phonenumber || !gitlink){
-            throw Error("You must provide a name,phonenumber and gitlink compulsarily")
+            throw Error("You must provide a firstname,phonenumber and gitlink compulsarily")
         }
 
         const profileexists= await Profile.findOne({_id})//use findone to give null value if only find is used we get null array difficult to use with if
@@ -56,45 +57,33 @@ const UpdateProfile = async(req,res)=>{
     }
 }
 
-
-const ViewProfile= async(req,res)=>{ 
-    try{
-        //getting id of session user from getid function of middleware
-        const _id = getuserid(req,res)
-        //finding profile with given id
-        const profile = await Profile.findOne({_id:_id})
-        res.status(200).json(profile)
-    }catch(error)
-    {
-        res.status(404).json({error:error.message})
-    }
-}
 const GetNamebyId=async (req, res) =>{
         const {userid}=req.params;
         try{
+            console.log(userid)
+
+            const User=await Profile.findOne({_id:userid});
+            const name=User.name
+            console.log(name)
+            res.status(200).json({name:name})
+            
+        }
+        catch(error)
+        {
+            console.log("erro")
+            res.status(404).json({error:error.message})
+        }
+    }
+    const GetNamebyToken=async (req, res) =>{
+        const userid=getuserid(req,res);
+        try{
             const User=await Profile.findOne({_id:userid});
             let name=User.name
-            console.log(name)
             res.status(200).json({name:name})
         }
         catch(error)
-        {   console.log(2)
+        {
             res.status(404).json({error:error.message})
         }
-}
-
-const GetNamebyToken=async (req, res) =>{
-    const userid=getuserid(req,res);
-    try{
-        const User=await Profile.findOne({_id:userid});
-        const name=User.name
-        res.status(200).json({name:name})
-    }
-    catch(error)
-    {
-        res.status(404).json({error:error.message})
-    }
-}
-
-
-module.exports ={CreateProfile,UpdateProfile,GetNamebyId,GetNamebyToken,ViewProfile};
+    }  
+module.exports ={CreateProfile,UpdateProfile,GetNamebyId,GetNamebyToken};

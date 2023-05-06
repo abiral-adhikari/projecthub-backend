@@ -17,7 +17,7 @@ app.use(cors());
 
 // Allow requests from specific origin
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://projecthub-78g5.onrender.com/',
   optionsSuccessStatus: 200
 }));
 

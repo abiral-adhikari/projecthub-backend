@@ -3,6 +3,8 @@ const dbConnect=require('./database/database.js');
 const app =express();//creating express app
 const bodyparser=require('body-parser');
 const cors=require('cors');
+const path=require('path');
+
 dbConnect();
 /*Port number selection 
 IF defined in the port environment variable 

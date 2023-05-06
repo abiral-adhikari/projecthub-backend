@@ -12,14 +12,19 @@ and store it in PORT const
 const PORT = process.env.PORT||5000;
 
 
-// Setting Cors header 
-app.use(cors());
+// // Setting Cors header 
+// app.use(cors());
 
-// Allow requests from specific origin
-app.use(cors({
-  origin: 'projecthub-78g5.onrender.com/:1',
-  optionsSuccessStatus: 200
-}));
+// // Allow requests from specific origin
+// app.use(cors({
+//   origin: 'projecthub-78g5.onrender.com/:1',
+//   optionsSuccessStatus: 200
+// }));
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://projecthub-78g5.onrender.com/');
+  next();
+});
 
 //port listening to info
 const listen=() => {

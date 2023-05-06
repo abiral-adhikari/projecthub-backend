@@ -13,12 +13,6 @@ and store it in PORT const
 */
 const PORT = process.env.PORT||5000;
 
-app.use(express.static(path.join(__dirname, '../frontend/build')));
-// Catch-all route that redirects all requests to the React app
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
-});
-
 // // Setting Cors header 
 // app.use(cors());
 
@@ -40,7 +34,11 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+// Catch-all route that redirects all requests to the React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+});
 //port listening to info
 const listen=() => {
     app.listen(PORT,'0.0.0.0',()=>{

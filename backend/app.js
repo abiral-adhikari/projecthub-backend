@@ -29,7 +29,7 @@ const PORT = process.env.PORT||5000;
 
 const corsOptions = {
   origin: 'https://projecthub-78g5.onrender.com',
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST','PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 

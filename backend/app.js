@@ -21,10 +21,18 @@ const PORT = process.env.PORT||5000;
 //   optionsSuccessStatus: 200
 // }));
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://projecthub-78g5.onrender.com/');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'https://projecthub-78g5.onrender.com/');
+//   next();
+// });
+
+const corsOptions = {
+  origin: 'https://projecthub-78g5.onrender.com',
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 
 //port listening to info
 const listen=() => {

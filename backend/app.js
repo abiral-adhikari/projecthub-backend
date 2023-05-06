@@ -35,12 +35,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-// // Catch-all route that redirects all requests to the React app
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
-// });
+// Catch-all route that redirects all requests to the React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+});
+
 //port listening to info
 const listen=() => {
     app.listen(PORT,'0.0.0.0',()=>{

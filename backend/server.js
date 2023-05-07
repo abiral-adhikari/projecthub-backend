@@ -14,7 +14,7 @@ const assignmentroute=require('./routes/todo.js')
 const resourceroute=require('./routes/resource.js')
 
 // Serve static files from the React app's build directory
-app.use(express.static(path.join(__dirname, '..frontend/build')));
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 
 // Set up your API routes here
@@ -27,5 +27,5 @@ app.use('/api/resource',resourceroute)
 
 // Catch-all route to serve the React app's index.html file
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..frontend/build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
 });

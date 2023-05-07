@@ -35,4 +35,4 @@ app.get('*', function (req, res) {
   console.log("Index.html")
   res.sendFile(path.join(__dirname, 'build/index.html'));
 });
-listen();
+

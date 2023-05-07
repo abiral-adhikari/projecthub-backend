@@ -73,6 +73,7 @@ const SeeMessage=async (req, res) => {
                 },
                 {$sort:{createdAt:-1}}
             ])
+            console.log(list)
             res.status(200).json(list)
             }
         }catch(error){

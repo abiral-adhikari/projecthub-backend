@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 // Catch-all route to serve the React app's index.html file
 
-app.get('*', function (req, res) {
+app.get('/*', function (req, res) {
   console.log("Index.html")
   res.sendFile(path.join(__dirname, 'build/index.html'));
 });

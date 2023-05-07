@@ -118,10 +118,9 @@ app.use('/api/resource',resourceroute)
 
 console.log("Serve")
 // Serve static files from the React app's build directory
-app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 // Catch-all route to serve the React app's index.html file
-app.get('/*', (req, res) => {
-    console.log("Index.html")
-    res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
-  });
++app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});

@@ -99,7 +99,6 @@ app.use(bodyparser.urlencoded({ extended: true }));
 /*functions to listen ,middle ware and database connections
   that are called when app is imported
 */
-listen();
 middleware();
 //for every page there is different 
 const userroute=require('./routes/user.js')
@@ -125,3 +124,4 @@ app.get('*', function (req, res) {
   console.log("Index.html")
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
+listen();

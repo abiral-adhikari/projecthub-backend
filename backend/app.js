@@ -3,8 +3,6 @@ const dbConnect=require('./database/database.js');
 const app =express();//creating express app
 const bodyparser=require('body-parser');
 const cors=require('cors');
-const path=require('path');
-
 dbConnect();
 /*Port number selection 
 IF defined in the port environment variable 
@@ -13,19 +11,15 @@ and store it in PORT const
 */
 const PORT = process.env.PORT||5000;
 
+
 // // Setting Cors header 
 // app.use(cors());
 
 // // Allow requests from specific origin
 // app.use(cors({
-//   origin: 'projecthub-78g5.onrender.com/:1',
+//   origin: 'http://localhost:3000',
 //   optionsSuccessStatus: 200
 // }));
-
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', 'https://projecthub-78g5.onrender.com/');
-//   next();
-// });
 
 const corsOptions = {
   origin: 'https://projecthub-78g5.onrender.com',
@@ -34,16 +28,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-// // Serve the static files from the React app
-// app.use(express.static(path.join(__dirname, 'build')));
-
-// // Serve the index.html file for all other requests
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'build/index.html'));
-// });
-
-
 //port listening to info
 const listen=() => {
     app.listen(PORT,'0.0.0.0',()=>{
@@ -67,4 +51,5 @@ app.use(bodyparser.urlencoded({ extended: true }));
 */
 listen();
 middleware();
+
 module.exports =app;

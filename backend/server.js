@@ -4,8 +4,12 @@ attach environment variables to process.env from .env file
 require('dotenv').config();
 const http = require('http');//import http module
 // const app=require('./app');
-const express = require('express');
 const path = require('path');
+const express = require('express');//import express module 
+const dbConnect=require('./database/database.js');
+const app =express();//creating express app
+const bodyparser=require('body-parser');
+const cors=require('cors');
 
 // //for every page there is different 
 // const userroute=require('./routes/user.js')
@@ -33,12 +37,7 @@ const path = require('path');
 
 
 
-const express = require('express');//import express module 
-const dbConnect=require('./database/database.js');
-const app =express();//creating express app
-const bodyparser=require('body-parser');
-const cors=require('cors');
-const path=require('path');
+
 
 dbConnect();
 /*Port number selection 

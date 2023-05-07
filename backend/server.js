@@ -3,7 +3,7 @@ attach environment variables to process.env from .env file
 */
 require('dotenv').config();
 const http = require('http');//import http module
-const app=require('./app');
+// const app=require('./app');
 const express = require('express');
 const path = require('path');
 

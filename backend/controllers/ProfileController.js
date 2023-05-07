@@ -86,4 +86,16 @@ const GetNamebyId=async (req, res) =>{
             res.status(404).json({error:error.message})
         }
     }  
-module.exports ={CreateProfile,UpdateProfile,GetNamebyId,GetNamebyToken};
+    const ViewProfile= async(req,res)=>{ 
+        try{
+            //getting id of session user from getid function of middleware
+            const _id = getuserid(req,res)
+            //finding profile with given id
+            const profile = await Profile.findOne({_id:_id})
+            res.status(200).json(profile)
+        }catch(error)
+        {
+            res.status(404).json({error:error.message})
+        }
+    }
+module.exports ={CreateProfile,UpdateProfile,GetNamebyId,GetNamebyToken,ViewProfile};

@@ -2,6 +2,7 @@ const{Project} =require('../models/project')
 const{Profile}= require('../models/user')
 const{Discussion}= require('../models/discussion')
 const{Assignment}=require('../models/todo.js')
+const{Resource}=require('../models/resource')
 const shortid = require('shortid');
 const nodemailer=require('nodemailer');
 const{parser}=require('../app');
@@ -45,6 +46,11 @@ const CreateProject= async (req,res)=>{
         })
 
         const createAssignment= await Assignment.create({
+            "_id":createProject._id,
+            "title":createProject.title
+        })
+
+        const createResource= await Resource.create({
             "_id":createProject._id,
             "title":createProject.title
         })

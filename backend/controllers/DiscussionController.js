@@ -62,18 +62,9 @@ const SeeMessage=async (req, res) => {
             Reminder again with aggregation we needd $ before fieldname
             */
 
-            const list= await Discussion.aggregate([
-                {$unwind:"$message"}, 
-                {$project:{
-                    _id:0,
-                    name:"$message.name",
-                    detail:"$message.detail",
-                    createdAt:"$message.createdAt"
-                    }
-                },
-                {$sort:{createdAt:-1}}
-            ])
-            console.log(list)
+            const list = await Discussion.findOne({ _id: projectid }).sort({
+                createdAt: -1,
+              });
             res.status(200).json(list)
             }
         }catch(error){

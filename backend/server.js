@@ -13,14 +13,6 @@ const discussionroute=require('./routes/discussion.js')
 const assignmentroute=require('./routes/todo.js')
 const resourceroute=require('./routes/resource.js')
 
-// Serve static files from the React app's build directory
-app.use(express.static(path.join(__dirname, '../frontend/build')));
-
-// Catch-all route to serve the React app's index.html file
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-});
-
 // Set up your API routes here
 //route handling for 
 app.use('/api/user',userroute)
@@ -29,3 +21,10 @@ app.use('/api/chat',discussionroute)
 app.use('/api/todo',assignmentroute)
 app.use('/api/resource',resourceroute)
 
+// Serve static files from the React app's build directory
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+// Catch-all route to serve the React app's index.html file
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+});

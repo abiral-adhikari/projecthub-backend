@@ -5,6 +5,8 @@ require('dotenv').config();
 const http = require('http');//import http module
 const app=require('./app');
 const express = require('express');
+const path = require('path');
+
 const userroute=require('./routes/user.js')
 const projectroute=require('./routes/project.js')
 const discussionroute=require('./routes/discussion.js')

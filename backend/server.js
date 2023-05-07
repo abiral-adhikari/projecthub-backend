@@ -16,3 +16,11 @@ app.use('/api/project',projectroute)
 app.use('/api/chat',discussionroute)
 app.use('/api/todo',assignmentroute)
 app.use("/api/resource",resourceroute)
+
+// Serve the static files from the React app
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Serve the index.html file for all other requests
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build/index.html'));
+});

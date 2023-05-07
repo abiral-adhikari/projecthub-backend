@@ -35,13 +35,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Serve the static files from the React app
-app.use(express.static(path.join(__dirname, '../frontend/build')));
+// // Serve the static files from the React app
+// app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-// Serve the index.html file for all other requests
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
-});
+// // Serve the index.html file for all other requests
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+// });
 
 
 //port listening to info

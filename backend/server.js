@@ -26,13 +26,13 @@ app.use('/api/chat',discussionroute)
 app.use('/api/todo',assignmentroute)
 app.use('/api/resource',resourceroute)
 
-// Serve static files from the React app's build directory
-app.use(express.static(path.join(__dirname, 'build')));
+// // Serve static files from the React app's build directory
+// app.use(express.static(path.join(__dirname, 'build')));
 
-// Catch-all route to serve the React app's index.html file
+// // Catch-all route to serve the React app's index.html file
 
-app.get('/*', function (req, res) {
-  console.log("Index.html")
-  res.sendFile(path.join(__dirname, 'build/index.html'));
-});
+// app.get('/*', function (req, res) {
+//   console.log("Index.html")
+//   res.sendFile(path.join(__dirname, 'build/index.html'));
+// });
 

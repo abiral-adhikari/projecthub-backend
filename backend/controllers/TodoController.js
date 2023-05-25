@@ -100,7 +100,7 @@ const UpdateAssignment= async(req,res)=>{
                 }
             }
             else{
-                const checktodo= await Assignment.findOne({"_id":projectid,"list._id":todoid,"list.assignedto":userid})
+                const checktodo= await Assignment.findOne({"_id":projectid,"list._id":todoid,"list.assignedto._id":userid})
                 // checking if  provided todop exists
                 if(!checktodo){
                     throw Error("No such todo exists assigned to you")

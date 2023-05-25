@@ -204,7 +204,6 @@ module.exports={
     CreateAssignment,
     UpdateAssignment,
     ProjectProgress,
-    UserProgress,
     ViewAssignment,
     ViewSelfAssignment
 }

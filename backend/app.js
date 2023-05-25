@@ -3,6 +3,8 @@ const dbConnect=require('./database/database.js');
 const app =express();//creating express app
 const bodyparser=require('body-parser');
 const cors=require('cors');
+const path=require('path');
+
 dbConnect();
 /*Port number selection 
 IF defined in the port environment variable 
@@ -11,15 +13,19 @@ and store it in PORT const
 */
 const PORT = process.env.PORT||5000;
 
-
 // // Setting Cors header 
 // app.use(cors());
 
 // // Allow requests from specific origin
 // app.use(cors({
-//   origin: 'http://localhost:3000',
+//   origin: 'projecthub-78g5.onrender.com/:1',
 //   optionsSuccessStatus: 200
 // }));
+
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'https://projecthub-78g5.onrender.com/');
+//   next();
+// });
 
 const corsOptions = {
   origin: 'https://projecthub-78g5.onrender.com',
@@ -28,6 +34,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
 //port listening to info
 const listen=() => {
     app.listen(PORT,'0.0.0.0',()=>{

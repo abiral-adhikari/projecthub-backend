@@ -59,7 +59,7 @@ const SeeMessage=async (req, res) => {
             $unwind creates seperate document for each  element in array
             $project creates document with just name ,details and createdAt
 
-            Reminder again with aggregation we need $ before fieldname
+            Reminder again with aggregation we needd $ before fieldname
             */
 
             const list = await Discussion.findOne({ _id: projectid }).sort({

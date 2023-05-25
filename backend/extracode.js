@@ -25,24 +25,5 @@
 
 
 
-const UserProgress=async(req,res)=>{
-    userid=getuserid(req,res);
-    try{
-        const totalpointdata=await Assignment.aggregate([
-            {$unwind:"$list"},
-            {$match:{"list.$.assignedto":userid}},
-            // {
-            //     $group:{
-            //         _id:"_id",
-            //         totalPoints:{$sum:"list.point"},
-            //         completedPoints:{$sum: { $cond: [{ $eq: ["$list.tag", "Complete"] }, "$list.point", 0] } }
-            //     }
-            // }
-        ])
-            res.status(200).json(totalpointdata)
-    }
-    catch(error){
-        res.status(400).json({error:error.message})
-    }
-}
+
 
